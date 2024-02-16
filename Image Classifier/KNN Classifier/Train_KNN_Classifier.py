@@ -2,6 +2,7 @@
 import cv2
 import json
 from imutils import paths
+import numpy as np
 
 # loading a json file with annotations of dog and cat images
 folder_path = "Image Classifier/dog and cat images and annotation/"
