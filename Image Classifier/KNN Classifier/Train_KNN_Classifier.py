@@ -1,20 +1,32 @@
 
-import json
-import random
 import cv2
+import json
+from imutils import paths
 
 # loading a json file with annotations of dog and cat images
-jsonFile = open("Image Classifier/dog and cat images and annotation/_annotations.json")
+folder_path = "Image Classifier/dog and cat images and annotation/"
+jsonFile = open(folder_path + "_annotations.json")
 annotations = json.load(jsonFile)
 
-# randomly choosing an image
-random_filename = 'Image Classifier/dog and cat images and annotation/' + random.choice(list(annotations["annotations"].keys()))
+image_paths = list(paths.list_images(folder_path))
+train_images = []
+train_labels = []
+class_object = annotations['labels']
 
-# reading and resizing to reduce the processing time
-image = cv2.imread(random_filename)
-image = cv2.resize(image, (32, 32))
+for i, path in enumerate(image_paths):
 
-# and now show the image
-cv2.imshow("Example Image", image)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    # read, convert to grayscale and resize to reduce the processing time
+    image = cv2.imread(path)
+    image = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
+    image = cv2.resize(image, (32, 32))
+    flat_image = image.flatten()
+
+    #label image using the annotations
+    temp_label = annotations["annotations"][path[len(folder_path):]][0]['label']
+    label = class_object.index(temp_label)
+    
+    #Append flattened image and label
+    train_images.append(flat_image)
+    train_labels.append(label)
+    print('Loaded...', 'Image', str(i+1), 'is a', temp_label)
+
