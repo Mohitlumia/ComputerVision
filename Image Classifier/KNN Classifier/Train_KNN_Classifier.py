@@ -50,9 +50,16 @@ test_size = 0.2
 train_samples, test_samples, train_labels, test_labels = train_test_split(
     train_images, train_labels, test_size=test_size, random_state=0)
 
+########################################################################
+
 # KNN works on the majority votes from k nearest sample
 # k is a hyper-perameter which can be found with max accuracy in Validation Table
 # to train the KNN model we will us cv2.ml.KNearest_create() from cv2
+# it may take a while depending on how large the dataset is
+
+from datetime import datetime
+
+start_datetime = datetime.now()
 
 knn = cv2.ml.KNearest_create()
 knn.train(train_samples, cv2.ml.ROW_SAMPLE, train_labels)
@@ -68,13 +75,17 @@ for res in k_result:
     flat_result = [item for sublist in res for item in sublist]
     flattened.append(flat_result)
 
+end_datetime = datetime.now()
+print('Training Duration: ' + str(end_datetime-start_datetime))
 
 ########################################################################
+
 from sklearn.metrics import confusion_matrix
 
 # create an empty list to save accuracy and the cofusion matrix
 accuracy_res = []
 con_matrix = []
+
 # we will use a loop because we have multiple value of k
 for k_res in k_result:
     label_names = [0, 1]
@@ -86,6 +97,15 @@ for k_res in k_result:
     # calculate accuracy
     accuracy = correct*100.0/result.size
     accuracy_res.append(accuracy)
+
 # stor accuracy for later when we create the graph
 res_accuracy = {k_values[i]: accuracy_res[i] for i in range(len(k_values))}
 list_res = sorted(res_accuracy.items())
+
+#######################################################################
+
+# get k with max accuracy in validation data
+k_best = max(list_res,key=lambda item:item[1])[0]
+
+# and at the end save the KNN model to a file
+knn.save('Image Classifier/KNN Classifier/knn_samples.yml')
