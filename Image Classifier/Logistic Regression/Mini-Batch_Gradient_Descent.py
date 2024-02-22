@@ -62,7 +62,17 @@ class logistic_regression(nn.Module):
 # Create the logistic_regression result
 model = logistic_regression(1)
 
-x,y = data_set[2]
+# define a criterion using Binary Cross Entropy Loss
+criterion = nn.BCELoss()
 
+# we have our sample
+x, y = data_set[0]
+print("x = {},  y = {}".format(x,y))
+
+# we can make prediction using model
 sigma = model(x)
-print(sigma)
+print("Prediction",sigma)
+
+# we can calculate Loss
+loss = criterion(sigma, y)
+print("Loss",loss)
