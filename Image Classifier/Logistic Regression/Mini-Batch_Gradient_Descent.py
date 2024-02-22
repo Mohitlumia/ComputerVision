@@ -57,3 +57,12 @@ class logistic_regression(nn.Module):
         yhat = torch.sigmoid(self.linear(x))
         return yhat
 
+
+
+# Create the logistic_regression result
+model = logistic_regression(1)
+
+x,y = data_set[2]
+
+sigma = model(x)
+print(sigma)
