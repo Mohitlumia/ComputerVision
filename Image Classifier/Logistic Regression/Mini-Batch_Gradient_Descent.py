@@ -76,3 +76,17 @@ print("Prediction",sigma)
 # we can calculate Loss
 loss = criterion(sigma, y)
 print("Loss",loss)
+
+
+#########################################
+# Setting the Batch Size using DataLoader
+
+batch_size = 10
+
+trainloader = DataLoader(dataset = data_set, batch_size = 10)
+
+dataset_iter = iter(trainloader)
+
+X,y = next(dataset_iter )
+
+print(X)
