@@ -12,6 +12,7 @@ import numpy as np
 torch.manual_seed(0)
 
 
+
 # Create the custom Data class which inherits Dataset
 class Data(Dataset):
     
@@ -33,4 +34,26 @@ class Data(Dataset):
     # Get length of the dataset
     def __len__(self):
         return self.len
+
+
+# Create Data object
+data_set = Data()
+
+
+# Create the Model and Total Loss Function (Cost)
+# Create logistic_regression class that inherits nn.Module which is the base class for all neural networks
+class logistic_regression(nn.Module):
+    
+    # Constructor
+    def __init__(self, n_inputs):
+        super(logistic_regression, self).__init__()
+        # size of the input, or the dimension of x is 1
+        # Single layer of Logistic Regression with number of inputs being n_inputs and there being 1 output 
+        self.linear = nn.Linear(n_inputs, 1)
+        
+    # Prediction
+    def forward(self, x):
+        # Using the input x value puts it through the single layer defined above then puts the output through the sigmoid function and returns the result
+        yhat = torch.sigmoid(self.linear(x))
+        return yhat
 
