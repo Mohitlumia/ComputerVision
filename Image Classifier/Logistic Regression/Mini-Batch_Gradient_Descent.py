@@ -160,3 +160,12 @@ for prediction, actual in zip(yhat, data_set.y):
 # Outputs the accuracy by dividing the correct predictions by the length of the dataset
 print("Accuracy: ", correct/len(data_set)*100, "%")
 
+
+###########################################
+# Plot the loss_values over every tenth iteration
+
+import matplotlib.pyplot as plt
+
+plt.plot(loss_values)
+plt.xlabel("Iteration")
+plt.ylabel("Cost")
