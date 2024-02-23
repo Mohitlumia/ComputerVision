@@ -132,10 +132,31 @@ for epoch in range(epochs):
         loss.backward()
         # Updates the weight and bias according to calculated gradient value
         optimizer.step()
-        loss_values.append(loss)
+        # Saves the loss of the iteration
+        loss_values.append(loss.tolist())
 
 
 # Final values of weight and bias
 w = model.state_dict()['linear.weight'].data[0]
 b = model.state_dict()['linear.bias'].data[0]
 print("w = ", w, "b = ", b)
+
+
+#########################################
+# Accuracy of the training data
+
+# Getting the predictions
+yhat = model(data_set.x)
+# Rounding the prediction to the nearedt integer 0 or 1 representing the classes
+yhat = torch.round(yhat)
+# Counter to keep track of correct predictions
+correct = 0
+# Goes through each prediction and actual y value
+for prediction, actual in zip(yhat, data_set.y):
+    # Compares if the prediction and actualy y value are the same
+    if (prediction == actual):
+        # Adds to counter if prediction is correct
+        correct+=1
+# Outputs the accuracy by dividing the correct predictions by the length of the dataset
+print("Accuracy: ", correct/len(data_set)*100, "%")
+
