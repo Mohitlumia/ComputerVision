@@ -39,3 +39,18 @@ class SoftMax(nn.Module):
         # Runs the x value through the single layers defined above
         z = self.linear(x)
         return z
+
+train_dataset = dsets.MNIST(root='Image Classifier/MNIST', train=True, download=True, transform=transforms.ToTensor())
+validation_dataset = dsets.MNIST(root='Image Classifier/MNIST', download=True, transform=transforms.ToTensor())
+
+# Set input size and output size
+input_dim = 28 * 28
+output_dim = 10
+
+# Create the model
+# Input dim is 28*28 which is the image converted to a tensor
+# Output dim is 10 because there are 10 possible digits the image can be
+model = SoftMax(input_dim, output_dim)
+
+print('W: ',list(model.parameters())[0].size())
+print('b: ',list(model.parameters())[1].size())
