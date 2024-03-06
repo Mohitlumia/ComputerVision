@@ -52,5 +52,36 @@ output_dim = 10
 # Output dim is 10 because there are 10 possible digits the image can be
 model = SoftMax(input_dim, output_dim)
 
-print('W: ',list(model.parameters())[0].size())
-print('b: ',list(model.parameters())[1].size())
+# First we get the X value of the first image
+X = train_dataset[0][0]
+
+# We can see the shape is 1 by 28 by 28, we need it to be flattened to 1 by 28 * 28 (784)
+X = X.view(-1, 28*28)
+
+# Now we can make a prediction, each class has a value, and the higher it is the more confident the model is that it is that digit
+# compare model output one first image with its label
+import torch
+
+model_output = model(X)
+actual = torch.tensor([train_dataset[0][1]])
+
+print("Output: ", model_output)
+print("Actual:", actual)
+
+# Define the learning rate, optimizer, criterion, and data loader
+
+learning_rate = 0.1
+
+# The optimizer will updates the model parameters using the learning rate
+optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+
+# The criterion will measure the loss between the prediction and actual label values
+# This is where the SoftMax occurs, it is built into the Criterion Cross Entropy Loss
+criterion = nn.CrossEntropyLoss()
+print(criterion(model_output, actual))
+
+# Created a training data loader so we can set the batch size
+train_loader = torch.utils.data.DataLoader(dataset=train_dataset, batch_size=100)
+
+# Created a validation data loader so we can set the batch size
+validation_loader = torch.utils.data.DataLoader(dataset=validation_dataset, batch_size=5000)
