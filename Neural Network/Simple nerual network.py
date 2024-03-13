@@ -4,7 +4,6 @@ from torch.utils.data import Dataset, DataLoader    # Used to help create the da
 import torch.nn as nn                               # PyTorch Neural Network
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-from PIL import Image
 import numpy as np
 
 
@@ -184,9 +183,9 @@ def plot_decision_regions_2class(model,data_set):
 data_set = XOR_Data()
 data_set.plot_stuff()
 
-#create a model with one neuron
+#create a model with two neuron
 
-model = Net(2,1,1)
+model = Net(2,2,1)
 
 # Train the model
 
