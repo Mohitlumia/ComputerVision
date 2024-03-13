@@ -5,9 +5,11 @@ import torch.nn as nn                               # PyTorch Neural Network
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 from PIL import Image
+import numpy as np
 
 
-##################################################################################
+
+#################################################################################
 # Define the class XOR_Data
 
 class XOR_Data(Dataset):
@@ -66,13 +68,6 @@ class XOR_Data(Dataset):
         pil_image.save('Neural Network/XOR Dataset.png')
 
 
-
-# Create dataset object
-
-data_set = XOR_Data()
-data_set.plot_stuff()
-
-
 #################################################################################
 # Define the class Net with one hidden layer 
 
@@ -97,8 +92,15 @@ class Net(nn.Module):
         return x
 
 
+#################################################################################
+# Calculate the accuracy
 
-#########################################################################################
+def accuracy(model, data_set):
+    # Rounds prediction to nearest integer 0 or 1
+    # Checks if prediction matches the actual values and returns accuracy rate
+    return np.mean(data_set.y.view(-1).numpy() == (model(data_set.x)[:, 0] > 0.5).numpy())
+
+#################################################################################
 # Function to Train the Model
 
 def train(data_set, model, criterion, train_loader, optimizer, epochs=5):
@@ -126,8 +128,15 @@ def train(data_set, model, criterion, train_loader, optimizer, epochs=5):
         # Saves cost and accuracy
         ACC.append(accuracy(model, data_set))
         COST.append(total)
-        
-    # Prints Cost vs Epoch graph
+    
+    return COST, ACC
+
+
+#################################################################################
+# Save plot of Cost and Accuracy vs. Epoch
+
+def plot_cost_acc(COST,ACC):
+    # Plot Cost vs Epoch graph
     fig, ax1 = plt.subplots()
     color = 'tab:red'
     ax1.plot(COST, color=color)
@@ -135,7 +144,7 @@ def train(data_set, model, criterion, train_loader, optimizer, epochs=5):
     ax1.set_ylabel('total loss', color=color)
     ax1.tick_params(axis='y', color=color)
     
-    # Prints Accuracy vs Epoch graph
+    # Plot Accuracy vs Epoch graph
     ax2 = ax1.twinx()  
     color = 'tab:blue'
     ax2.set_ylabel('accuracy', color=color)  # we already handled the x-label with ax1
@@ -143,8 +152,75 @@ def train(data_set, model, criterion, train_loader, optimizer, epochs=5):
     ax2.tick_params(axis='y', color=color)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     
-    plt.show()
+    # Convert Matplotlib figure to PIL Image
+    fig.canvas.draw()
+    buf = fig.canvas.tostring_rgb()
+    width, height = fig.canvas.get_width_height()
+    pil_image = Image.frombytes("RGB", (width, height), buf)
+    
+    # Save PIL Image as PNG
+    pil_image.save('Neural Network/Cost and Accuracy.png')
 
-    return COST
 
+#################################################################################
+# Plot the data
+
+def plot_decision_regions_2class(model,data_set):
+    cmap_light = ListedColormap(['#FFAAAA', '#AAFFAA', '#00AAFF'])
+    cmap_bold = ListedColormap(['#FF0000', '#00FF00', '#00AAFF'])
+    X = data_set.x.numpy()
+    y = data_set.y.numpy()
+    h = .02
+    x_min, x_max = X[:, 0].min() - 0.1 , X[:, 0].max() + 0.1 
+    y_min, y_max = X[:, 1].min() - 0.1 , X[:, 1].max() + 0.1 
+    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),np.arange(y_min, y_max, h))
+    XX = torch.Tensor(np.c_[xx.ravel(), yy.ravel()])
+
+    yhat = np.logical_not((model(XX)[:, 0] > 0.5).numpy()).reshape(xx.shape)
+
+    # Plot the data and save as an image
+    fig,ax = plt.subplots()
+    ax.pcolormesh(xx, yy, yhat, cmap=cmap_light, shading='auto')
+    ax.plot(X[y[:, 0] == 0, 0], X[y[:, 0] == 0, 1], 'o', label='y=0')
+    ax.plot(X[y[:, 0] == 1, 0], X[y[:, 0] == 1, 1], 'ro', label='y=1')
+    ax.legend()
+
+    # Convert Matplotlib figure to PIL Image
+    fig.canvas.draw()
+    buf = fig.canvas.tostring_rgb()
+    width, height = fig.canvas.get_width_height()
+    pil_image = Image.frombytes("RGB", (width, height), buf)
+    
+    # Save PIL Image as PNG
+    pil_image.save('Neural Network/Decision region.png')
+
+
+#################################################################################
+
+# Create dataset object
+
+data_set = XOR_Data()
+data_set.plot_stuff()
+
+
+#create a model with one neuron
+
+model = Net(2,1,1)
+
+
+# Train the model
+
+learning_rate = 0.1
+# We create a criterion which will measure loss
+criterion = nn.BCELoss()
+# Create an optimizer that updates model parameters using the learning rate and gradient
+optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+# Create a Data Loader for the training data with a batch size of 1 
+train_loader = DataLoader(dataset=data_set, batch_size=1)
+# Using the training function train the model on 500 epochs
+cost, acc = train(data_set, model, criterion, train_loader, optimizer, epochs=500)
+# save plot of cost and accuracy vs. epoch
+plot_cost_acc(cost,acc)
+# Plot the data with decision boundaries
+plot_decision_regions_2class(model, data_set)
 
