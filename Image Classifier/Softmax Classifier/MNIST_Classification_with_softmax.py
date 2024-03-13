@@ -126,3 +126,17 @@ ax2.set_ylabel('accuracy', color=color)
 ax2.plot( accuracy_list, color=color)
 ax2.tick_params(axis='y', color=color)
 fig.tight_layout()
+
+###################################################################
+# Save the plot as an image
+
+from PIL import Image
+
+# Convert Matplotlib figure to PIL Image
+fig.canvas.draw()
+buf = fig.canvas.tostring_rgb()
+width, height = fig.canvas.get_width_height()
+pil_image = Image.frombytes("RGB", (width, height), buf)
+ 
+# Save PIL Image as PNG
+pil_image.save('Image Classifier/Softmax Classifier/total loss and accuracy.png')
