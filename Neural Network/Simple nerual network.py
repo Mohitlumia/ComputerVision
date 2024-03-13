@@ -53,19 +53,13 @@ class XOR_Data(Dataset):
     
     # Plot the data and save as an image
     def plot_stuff(self):
-        fig, ax1 = plt.subplots()
-        ax1.plot(self.x[self.y[:, 0] == 0, 0].numpy(), self.x[self.y[:, 0] == 0, 1].numpy(), 'o', label="y=0")
-        ax1.plot(self.x[self.y[:, 0] == 1, 0].numpy(), self.x[self.y[:, 0] == 1, 1].numpy(), 'ro', label="y=1")
-        ax1.legend()
+        plt.figure()
+        plt.plot(self.x[self.y[:, 0] == 0, 0].numpy(), self.x[self.y[:, 0] == 0, 1].numpy(), 'o', label="y=0")
+        plt.plot(self.x[self.y[:, 0] == 1, 0].numpy(), self.x[self.y[:, 0] == 1, 1].numpy(), 'ro', label="y=1")
+        plt.legend()
 
-        # Convert Matplotlib figure to PIL Image
-        fig.canvas.draw()
-        buf = fig.canvas.tostring_rgb()
-        width, height = fig.canvas.get_width_height()
-        pil_image = Image.frombytes("RGB", (width, height), buf)
-        
-        # Save PIL Image as PNG
-        pil_image.save('Neural Network/XOR Dataset.png')
+        plt.savefig('Neural Network/Dataset.png', bbox_inches='tight')
+        plt.close()
 
 
 #################################################################################
@@ -152,14 +146,8 @@ def plot_cost_acc(COST,ACC):
     ax2.tick_params(axis='y', color=color)
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     
-    # Convert Matplotlib figure to PIL Image
-    fig.canvas.draw()
-    buf = fig.canvas.tostring_rgb()
-    width, height = fig.canvas.get_width_height()
-    pil_image = Image.frombytes("RGB", (width, height), buf)
-    
-    # Save PIL Image as PNG
-    pil_image.save('Neural Network/Cost and Accuracy.png')
+    plt.savefig('Neural Network/Cost and Accuracy.png', bbox_inches='tight')
+    plt.close()
 
 
 #################################################################################
@@ -179,20 +167,14 @@ def plot_decision_regions_2class(model,data_set):
     yhat = np.logical_not((model(XX)[:, 0] > 0.5).numpy()).reshape(xx.shape)
 
     # Plot the data and save as an image
-    fig,ax = plt.subplots()
-    ax.pcolormesh(xx, yy, yhat, cmap=cmap_light, shading='auto')
-    ax.plot(X[y[:, 0] == 0, 0], X[y[:, 0] == 0, 1], 'o', label='y=0')
-    ax.plot(X[y[:, 0] == 1, 0], X[y[:, 0] == 1, 1], 'ro', label='y=1')
-    ax.legend()
+    plt.figure()
+    plt.pcolormesh(xx, yy, yhat, cmap=cmap_light, shading='auto')
+    plt.plot(X[y[:, 0] == 0, 0], X[y[:, 0] == 0, 1], 'o', label='y=0')
+    plt.plot(X[y[:, 0] == 1, 0], X[y[:, 0] == 1, 1], 'ro', label='y=1')
+    plt.legend()
 
-    # Convert Matplotlib figure to PIL Image
-    fig.canvas.draw()
-    buf = fig.canvas.tostring_rgb()
-    width, height = fig.canvas.get_width_height()
-    pil_image = Image.frombytes("RGB", (width, height), buf)
-    
-    # Save PIL Image as PNG
-    pil_image.save('Neural Network/Decision region.png')
+    plt.savefig('Neural Network/Decision region.png', bbox_inches='tight')
+    plt.close()
 
 
 #################################################################################
@@ -202,11 +184,9 @@ def plot_decision_regions_2class(model,data_set):
 data_set = XOR_Data()
 data_set.plot_stuff()
 
-
 #create a model with one neuron
 
 model = Net(2,1,1)
-
 
 # Train the model
 
