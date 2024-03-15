@@ -181,5 +181,16 @@ plt.ylabel('loss')
 plt.title('training loss iterations')
 plt.legend()
 
-plt.savefig('Neural Network/ReLU vs. Sigmoid/ReLU vs. Sigmoid Loss.png', bbox_inches='tight')
+plt.savefig('Neural Network/ReLU vs. Sigmoid/ReLU vs. Sigmoid Training Loss.png', bbox_inches='tight')
+plt.close()
+
+# Compare the validation loss
+
+plt.plot(training_results['validation_accuracy'], label = 'sigmoid')
+plt.plot(training_results_relu['validation_accuracy'], label = 'relu') 
+plt.ylabel('validation accuracy')
+plt.xlabel('Iteration')   
+plt.legend()
+
+plt.savefig('Neural Network/ReLU vs. Sigmoid/ReLU vs. Sigmoid Validation Accuracy.png', bbox_inches='tight')
 plt.close()
