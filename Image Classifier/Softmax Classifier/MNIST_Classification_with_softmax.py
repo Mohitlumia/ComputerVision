@@ -9,9 +9,9 @@ from matplotlib import pyplot as plt
 ##########################################################
 # download the Training and Validation MNIST digit images
 
-train_dataset = dsets.MNIST(root='./Image Classifier/MNIST', train=True, download=True, transform=transforms.ToTensor())
+train_dataset = dsets.MNIST(root='./Data/', train=True, download=False, transform=transforms.ToTensor())
 
-validation_dataset = dsets.MNIST(root='./Image Classifier/MNIST', download=True, transform=transforms.ToTensor())
+validation_dataset = dsets.MNIST(root='./Data/', download=False, transform=transforms.ToTensor())
 
 ##########################################################
 # Create a Softmax Classifier using PyTorch
